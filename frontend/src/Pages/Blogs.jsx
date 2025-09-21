@@ -131,11 +131,6 @@ function Blogs() {
                 <span className="blog-date-alt">
                   📅 {formatDate(blog.createdAt)}
                 </span>
-                {blog.author && (
-                  <span className="blog-author-alt">
-                    👤 {blog.author.name || blog.author.email}
-                  </span>
-                )}
               </div>
               
               <h3 

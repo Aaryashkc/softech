@@ -2,9 +2,6 @@ import React, { useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useBlogStore } from '../store/useBlogStore'
 import blogpic from '../assets/bd.png'
-import photo1 from '../assets/bd1.png'
-import photo2 from '../assets/bd2.png'
-
 function BlogDetails() {
   const { slug } = useParams()
   const navigate = useNavigate()
@@ -207,15 +204,24 @@ function BlogDetails() {
       </div>
       
       {/* CTA Section */}
-      <div className='blog-details-cta'>
-        <div className='blog-details-cta-content'>
-          <h4>Ready to Transform Your Learning Experience?</h4>
-          <div className="blog-details-cta-divider"></div>
-          <p>Join thousands of students who are already achieving their career goals with Softech Foundation. 
-             Start your journey today and unlock your potential with our expert-led courses.</p>
-          <button type="button" className='blog-details-cta-btn'>Get Started Now</button>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="container">
+          <div className="cta-content text-center">
+            <h3 className="cta-title">
+              Ready to Transform Your Learning Experience?
+            </h3>
+            <div className="cta-divider"></div>
+            <p className="cta-description">
+              Join thousands of students who are already achieving their career goals 
+              with Softech Foundation. Start your journey today!
+            </p>
+            <Link to="/inquiryform" className="btn btn-light btn-lg">
+              Get Started Now
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
