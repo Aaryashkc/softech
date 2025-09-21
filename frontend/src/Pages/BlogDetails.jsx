@@ -1,108 +1,219 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useBlogStore } from '../store/useBlogStore'
 import blogpic from '../assets/bd.png'
 import photo1 from '../assets/bd1.png'
 import photo2 from '../assets/bd2.png'
-import { Link } from 'react-router-dom'
 
 function BlogDetails() {
-  return (
-    <div>
-       <div className='d-flex justify-content-center contact'>
+  const { slug } = useParams()
+  const navigate = useNavigate()
+  const { blog, loading, error, fetchBlogById, blogs, fetchBlogs } = useBlogStore()
+
+  useEffect(() => {
+    if (slug) {
+      fetchBlogById(slug)
+    }
+  }, [slug, fetchBlogById])
+
+  useEffect(() => {
+    if (blogs.length === 0) {
+      fetchBlogs()
+    }
+  }, [fetchBlogs, blogs.length])
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })
+  }
+
+  const truncateText = (text, maxLength = 100) => {
+    if (text.length <= maxLength) return text
+    return text.substring(0, maxLength) + '...'
+  }
+
+  // Get related blogs (exclude current blog)
+  const relatedBlogs = blogs.filter(b => b._id !== blog?._id).slice(0, 3)
+
+  if (loading) {
+    return (
+      <div className='d-flex justify-content-center align-items-center' style={{ minHeight: '400px' }}>
         <div className='text-center'>
-          <h1>TITLE</h1>
-          <p>Sub Title here</p>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
+          <p className='mt-3'>Loading blog...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='d-flex justify-content-center align-items-center' style={{ minHeight: '400px' }}>
+        <div className='text-center'>
+          <div className="alert alert-danger" role="alert">
+            <h4 className="alert-heading">Error!</h4>
+            <p>{error}</p>
+            <button 
+              className="btn btn-primary me-2" 
+              onClick={() => fetchBlogById(slug)}
+            >
+              Try Again
+            </button>
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => navigate('/blogs')}
+            >
+              Back to Blogs
+            </button>
           </div>
-          <div className="container mt-4 mb-4">
-            <div>
-            <img className='blg' src={blogpic} alt="" />
-            <p className='pt-3' style={{ color: 'gray' }}>
-        <i className="bi bi-calendar-week ic"></i>14 June 2023</p>
-        <h3>Pellentesque dignissim enim sit amet <br />
-            venenatis cursus eget nunc.</h3>
-            <p className=''>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore <br />
-               et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut  <br />
-               aliquip ex ea commodo consequat aute irure dolor in reprehenderit. <br /> </p>
+        </div>
+      </div>
+    )
+  }
 
-              <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore <br />
-               et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut  <br />
-               aliquip ex ea commodo consequat aute irure dolor in reprehenderit. <br /> </p>
+  if (!blog) {
+    return (
+      <div className='d-flex justify-content-center align-items-center' style={{ minHeight: '400px' }}>
+        <div className='text-center'>
+          <h3>Blog not found</h3>
+          <p>The blog you're looking for doesn't exist.</p>
+          <button 
+            className="btn btn-primary" 
+            onClick={() => navigate('/blogs')}
+          >
+            Back to Blogs
+          </button>
+        </div>
+      </div>
+    )
+  }
 
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore <br />
-               et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut  <br />
-               aliquip ex ea commodo consequat aute irure dolor in reprehenderit.</p>
-            </div>
-            <div className='photo'>
-              <img className='photo1' src={photo1} alt="" />
-              <img className='photo2' src={photo2} alt="" />
-            </div>
-            <div>
-              <h3 className='fw-bold pt-4 pb-3'>Latest Articles Updated Daily</h3>
-              <p>With worldwide annual spend on digital advertising surpassing $325 billion, it’s no surprise that <br />
-                 different approaches to online marketing are becoming available. One of these new approaches is <br />
-                 performance marketing or digital performance marketing. Keep reading to learn all about <br />
-                 performance marketing</p>
-            </div>
-            <div>
-              <h3 className='fw-bold pt-2 pb-4'>Pellentesque dignissim enim sit amet <br />
-                  venenatis cursus eget nunc.</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore <br />
-                     et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut <br />
-                     aliquip ex ea commodo consequat aute irure dolor in reprehenderit.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore <br />
-                     et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut  <br />
-                     aliquip ex ea commodo consequat aute irure dolor in reprehenderit.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore  <br />
-                     et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut  <br />
-                     aliquip ex ea commodo consequat aute irure dolor in reprehenderit.</p>
-            </div>
-            <hr />
-            <div>
-              <h3>Related Contents</h3>
-              <div className='cont'>
-                 <div className='border b1'>
-                      <div className='box1'>
-                      <img className='image' src="https://s39613.pcdn.co/wp-content/uploads/2018/04/student-led-study-group-library-id842920176.jpg" alt="" />
-                      <p className='pt-3' style={{ color: 'gray' }}><i className="bi bi-calendar-week ic"></i>21 April 2024</p>
-                      <p className='font-weight:bold;'>velit esse cillum dolore eu fugiat nulla <br />
-                         pariatur. Excepteur sint occaecat <br />
-                         cupidatat</p>
-                       <Link className='bb' style={{background: '#DAE7FF', color: '#014B88'}} to="/blogdetails">Read More <i className="bi bi-arrow-right"></i></Link>
-                     </div>
-                     </div>
-                      <div className='border b1'>
-                           <div className='box1'>
-                           <img className='image' src="https://s39613.pcdn.co/wp-content/uploads/2018/04/student-led-study-group-library-id842920176.jpg" alt="" />
-                           <p className='pt-3' style={{ color: 'gray' }}><i className="bi bi-calendar-week ic"></i>21 April 2024</p>
-                           <p className='font-weight:bold;'>velit esse cillum dolore eu fugiat nulla <br />
-                              pariatur. Excepteur sint occaecat <br />
-                              cupidatat</p>
-                            <Link className='bb' style={{background: '#DAE7FF', color: '#014B88'}} to="/blogdetails">Read More <i className="bi bi-arrow-right"></i></Link>
-                          </div>
-                          </div>
-                           <div className='border b1'>
-                                <div className='box1'>
-                                <img className='image' src="https://s39613.pcdn.co/wp-content/uploads/2018/04/student-led-study-group-library-id842920176.jpg" alt="" />
-                                <p className='pt-3' style={{ color: 'gray' }}><i className="bi bi-calendar-week ic"></i>21 April 2024</p>
-                                <p className='font-weight:bold;'>velit esse cillum dolore eu fugiat nulla <br />
-                                   pariatur. Excepteur sint occaecat <br />
-                                   cupidatat</p>
-                                 <Link className='bb' style={{background: '#DAE7FF', color: '#014B88'}} to="/blogdetails">Read More <i className="bi bi-arrow-right"></i></Link>
-                               </div>
-                               </div>
+  return (
+    <div className="blog-details-page">
+      {/* Hero Section */}
+      <div className='blog-details-hero'>
+        <div className='blog-details-hero-content'>
+          <h1 className="blog-details-title">{blog.title}</h1>
+          {blog.subTitle && <p className="blog-details-subtitle">{blog.subTitle}</p>}
+        </div>
+      </div>
+      
+      {/* Main Content */}
+      <div className="blog-details-container">
+        <article className="blog-details-content">
+          <img 
+            className='blog-details-image' 
+            src={blog.titleImage || blogpic} 
+            alt={blog.title}
+          />
+          
+          <div className="blog-details-meta">
+            <div className="blog-details-meta-content">
+              <div className="blog-details-meta-item">
+                <i className="bi bi-calendar-week"></i>
+                <span>{formatDate(blog.createdAt)}</span>
+              </div>
+              {blog.author && (
+                <div className="blog-details-meta-item">
+                  <i className="bi bi-person"></i>
+                  <span>{blog.author.name || blog.author.email}</span>
+                </div>
+              )}
+              <div className="blog-details-meta-item">
+                <i className="bi bi-eye"></i>
+                <span>{blog.views} views</span>
               </div>
             </div>
-
           </div>
-         <hr />
-         <div className='exp'>
-        <div className='expp'>
-          <h4>Ready to Transform Your Learning <br />
-              Experience?</h4>
-          <hr className='h' />
-          <p>Join thousands of students who are already achieving their career goals with Softech <br />
-            Foundation Join thousands of students who are already achieving their career goals</p>
-          <button type="button" className='p-2 rounded border' style={{ background: '#014B88', color: 'white', border: 'none' }} >Get Started Now</button>
+          
+          <div className="blog-details-text">
+            {blog.content.split('\n').map((paragraph, index) => (
+              <p key={index}>
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {blog.tags && blog.tags.length > 0 && (
+            <div className="blog-details-tags">
+              <h5>Tags</h5>
+              <div className="blog-details-tags-list">
+                {blog.tags.map((tag, index) => (
+                  <span key={index} className="blog-details-tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </article>
+
+        {blog.secondImage && (
+          <img 
+            className='blog-details-second-image' 
+            src={blog.secondImage} 
+            alt="Blog content" 
+          />
+        )}
+
+        <div className='blog-details-content'>
+          <div className="blog-details-text">
+            <h3 className='fw-bold pt-4 pb-3'>Latest Articles Updated Daily</h3>
+            <p>With worldwide annual spend on digital advertising surpassing $325 billion, it's no surprise that 
+               different approaches to online marketing are becoming available. One of these new approaches is 
+               performance marketing or digital performance marketing. Keep reading to learn all about 
+               performance marketing</p>
+          </div>
+        </div>
+        
+        {relatedBlogs.length > 0 && (
+          <div className="blog-details-related">
+            <h3>Related Articles</h3>
+            <div className='blog-details-related-grid'>
+              {relatedBlogs.map((relatedBlog) => (
+                <Link 
+                  key={relatedBlog._id} 
+                  className='blog-details-related-card' 
+                  to={`/blogdetails/${relatedBlog.slug || relatedBlog._id}`}
+                >
+                  <img 
+                    className='blog-details-related-image' 
+                    src={relatedBlog.titleImage || "https://s39613.pcdn.co/wp-content/uploads/2018/04/student-led-study-group-library-id842920176.jpg"} 
+                    alt={relatedBlog.title}
+                  />
+                  <div className="blog-details-related-content">
+                    <div className="blog-details-related-meta">
+                      <i className="bi bi-calendar-week"></i>
+                      <span>{formatDate(relatedBlog.createdAt)}</span>
+                    </div>
+                    <h6 className="blog-details-related-title">
+                      {truncateText(relatedBlog.title, 60)}
+                    </h6>
+                    <div className="blog-details-related-link">
+                      Read More <i className="bi bi-arrow-right"></i>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* CTA Section */}
+      <div className='blog-details-cta'>
+        <div className='blog-details-cta-content'>
+          <h4>Ready to Transform Your Learning Experience?</h4>
+          <div className="blog-details-cta-divider"></div>
+          <p>Join thousands of students who are already achieving their career goals with Softech Foundation. 
+             Start your journey today and unlock your potential with our expert-led courses.</p>
+          <button type="button" className='blog-details-cta-btn'>Get Started Now</button>
         </div>
       </div>
     </div>

@@ -54,7 +54,7 @@ function App() {
         <Route path='/blogs' element={<Blogs/>}/>
         <Route path='/courses' element={<Courses/>}/>
         <Route path='/coursedetails' element={<CourseDetails/>}/>
-        <Route path='/blogdetails' element={<BlogDetails/>}/>
+        <Route path='/blogdetails/:slug' element={<BlogDetails/>}/>
         <Route path='/inquiryform' element={<EnquiryForm/>}/>
 
         {/* admin */}

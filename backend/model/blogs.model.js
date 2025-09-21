@@ -37,9 +37,8 @@ const blogSchema = new mongoose.Schema(
       trim: true,
     },
     author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      type: String,
+      trim: true,
     },
     views: {
       type: Number,

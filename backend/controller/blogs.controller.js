@@ -53,21 +53,38 @@ export const getBlogs = async (req, res) => {
   }
 };
 
-// Get single blog by ID
+// Get single blog by ID or slug
 export const getBlogById = async (req, res) => {
   try {
-    const blog = await Blogs.findById(req.params.id).populate("author");
+    const { id } = req.params;
+    console.log(`Fetching blog with ID/slug: ${id}`);
+    
+    // Check if it's a valid ObjectId, otherwise treat as slug
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+    let blog;
+    
+    if (isObjectId) {
+      blog = await Blogs.findById(id).populate("author");
+    } else {
+      blog = await Blogs.findOne({ slug: id }).populate("author");
+    }
+    
     if (!blog) {
+      console.log(`Blog not found for ID/slug: ${id}`);
       return res.status(404).json({ message: "Blog not found" });
     }
 
+    console.log(`Blog found: ${blog.title}, Current views: ${blog.views}`);
+    
     // increase view count
     blog.views += 1;
     await blog.save();
+    
+    console.log(`Blog views updated to: ${blog.views}`);
 
     res.status(200).json(blog);
   } catch (error) {
-    console.error(error);
+    console.error('Error in getBlogById:', error);
     res.status(500).json({ message: "Server error in fetching blog" });
   }
 };
