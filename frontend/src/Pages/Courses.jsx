@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import useCourseStore from '../store/useCourseStore';
 
 function Courses() {
@@ -128,13 +129,13 @@ function Courses() {
               
               <br />
               
-              <a 
-                href={`/coursedetails/${course._id}`}
+              <Link 
+                to={`/coursedetails/${course._id}`}
                 className="btn-learn-more"
                 aria-label={`Learn more about ${course.courseName || 'this course'}`}
               >
                 Learn More →
-              </a>
+              </Link>
             </div>
           </div>
         ))}
