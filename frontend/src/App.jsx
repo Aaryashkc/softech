@@ -11,6 +11,7 @@ import BlogDetails from './Pages/BlogDetails'
 import EnquiryForm from './Pages/EnquiryForm'
 import AdminDashboard from './admin/pages/Dashboard'
 import { useAuthStore } from './store/useAuthStore'
+import LoginPage from './admin/pages/LoginPage'
 
 function App() {
 
@@ -56,11 +57,10 @@ function App() {
         <Route path='/coursedetails' element={<CourseDetails/>}/>
         <Route path='/blogdetails/:slug' element={<BlogDetails/>}/>
         <Route path='/inquiryform' element={<EnquiryForm/>}/>
+        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/admin" />} />
 
-        {/* admin */}
-          {/* <Route path="/admin" element={authUser? <AdminDashboard /> :<Navigate to="/admin/login" />} /> */}
-          <Route path="/admin" element={<AdminDashboard />} />
-          {/* <Route path="/admin/login" element={!authUser?<AdminLogin />:<Navigate to="/admin" />}/> */}
+
+        <Route path="/admin" element={<AdminDashboard />} />
 
 
       </Routes> 

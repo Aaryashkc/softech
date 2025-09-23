@@ -158,16 +158,6 @@ function BlogDetails() {
             alt="Blog content" 
           />
         )}
-
-        <div className='blog-details-content'>
-          <div className="blog-details-text">
-            <h3 className='fw-bold pt-4 pb-3'>Latest Articles Updated Daily</h3>
-            <p>With worldwide annual spend on digital advertising surpassing $325 billion, it's no surprise that 
-               different approaches to online marketing are becoming available. One of these new approaches is 
-               performance marketing or digital performance marketing. Keep reading to learn all about 
-               performance marketing</p>
-          </div>
-        </div>
         
         {relatedBlogs.length > 0 && (
           <div className="blog-details-related">
